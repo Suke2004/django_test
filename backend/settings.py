@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-for-dev')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 
-ALLOWED_HOSTS = ['django-test-75vu.onrender.com']
+ALLOWED_HOSTS = ['django-test-75vu.onrender.com', 'localhost', '127.0.0.1']
 
 # Static files with WhiteNoise
 STATIC_URL = '/static/'
