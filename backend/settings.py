@@ -95,6 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # React dev server
     'https://django-test-75vu.onrender.com',
+    'https://suke2004.github.io',
 ]
 
 # Internationalization
