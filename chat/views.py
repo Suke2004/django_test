@@ -17,11 +17,11 @@ gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
 # OpenRouter config
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
-OPENROUTER_MODEL = os.environ.get("openrouter/cypher-alpha:free")
+OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL")
 
 # Groq config
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
-GROQ_MODEL = os.environ.get("llama3-70b-8192")
+GROQ_MODEL = os.environ.get("GROQ_MODEL")
 
 # Initialize Groq client
 groq_client = Groq(api_key=GROQ_API_KEY)
