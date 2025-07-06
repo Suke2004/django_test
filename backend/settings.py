@@ -13,8 +13,6 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # Hosts
 ALLOWED_HOSTS = [
     'django-test-75vu.onrender.com',
-    'localhost',
-    '127.0.0.1',
     os.environ.get('RENDER_EXTERNAL_HOSTNAME'),  # Render will inject this automatically
 ]
 
@@ -93,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # React dev server
+    'https://jayasree7917.github.io',  # React dev server
     'https://django-test-75vu.onrender.com',
     'https://suke2004.github.io',
     'https://openrouter.ai',
