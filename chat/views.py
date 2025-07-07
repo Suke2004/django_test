@@ -12,22 +12,34 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Gemini setup
-genai.configure(api_key=os.environ.get('GEMINI_API_KEY'))
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
 # OpenRouter config
-OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL")
 
 # Groq config
-GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 GROQ_MODEL = os.environ.get("GROQ_MODEL")
 
 # Initialize Groq client
 groq_client = Groq(api_key=GROQ_API_KEY)
 
+# System prompt
+system_prompt = (
+    "You are a helpful AI assistant. "
+    "Your task is to assist users with their questions and provide accurate information. "
+    "Always respond in a friendly and professional manner. "
+    "If you don't know the answer, say 'I'm not sure, but I can help you find out more.' "
+    "Be concise and to the point, and avoid unnecessary repetition."
+)
+
 def home(request):
-    return HttpResponse("<h1>Welcome to the AI Chatbot Backend</h1><p>Use the <code>/chat/</code> endpoint to talk to the bot.</p>")
+    return HttpResponse(
+        "<h1>Welcome to the AI Chatbot Backend</h1>"
+        "<p>Use the <code>/chat/</code> endpoint to talk to the bot.</p>"
+    )
 
 
 class ChatAPIView(APIView):
@@ -48,7 +60,7 @@ class ChatAPIView(APIView):
                 print("🔁 Using Ollama...")
                 response = requests.post(
                     "http://localhost:11434/api/generate",
-                    json={"model": os.environ.get('OLLAMA_MODEL'), "prompt": user_msg},
+                    json={"model": os.environ.get("OLLAMA_MODEL"), "prompt": user_msg},
                     stream=True,
                     timeout=30
                 )
@@ -68,6 +80,7 @@ class ChatAPIView(APIView):
                 payload = {
                     "model": OPENROUTER_MODEL,
                     "messages": [
+                        {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_msg}
                     ]
                 }
@@ -85,13 +98,17 @@ class ChatAPIView(APIView):
                 print("🔁 Using Groq SDK...")
                 groq_response = groq_client.chat.completions.create(
                     model=GROQ_MODEL,
-                    messages=[{"role": "user", "content": user_msg}]
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_msg}
+                    ]
                 )
                 ai_reply = groq_response.choices[0].message.content
 
             else:
                 print("🔁 Using Gemini...")
-                response = gemini_model.generate_content(user_msg)
+                prompt_with_system = f"{system_prompt}\n\nUser: {user_msg}"
+                response = gemini_model.generate_content(prompt_with_system)
                 ai_reply = getattr(response, "text", "No response from Gemini.")
 
             # Save AI reply
